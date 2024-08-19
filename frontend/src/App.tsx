@@ -5,8 +5,8 @@ import axios from 'axios';
 
 function App() {
   const handleClick = async () => {
-    const resp = axios.get('http://localhost:3025');
-    console.log(resp); 
+    const resp = await axios.post('http://localhost:3025/name', {name: "Michele"});
+    console.log("Response: ", resp.data); 
   }
 
   return (
