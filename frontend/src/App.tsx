@@ -1,20 +1,33 @@
 
 import './App.css';
-import { Box, Button, ChakraProvider } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider, Input, FormControl, FormLabel } from '@chakra-ui/react';
 import axios from 'axios';
+import React, { useState } from 'react'; // Add this line
 
 function App() {
+  const [name, setName] = useState("");
+
+  const handleChange = (e) => {
+    setName(e.target.value);
+  }
+
   const handleClick = async () => {
-    const resp = await axios.post('http://localhost:3025/name', {name: "Michele"});
+    const resp = await axios.post('http://localhost:3025/name', {
+      name,
+  });
     console.log("Response: ", resp.data); 
   }
 
   return (
      <ChakraProvider>
-      <Box>
-        HI FROM APP
-        </Box>
-        <Button colorScheme="purple" onClick={handleClick}>Button</Button>
+      <Box m={10} display="flex">
+        <FormControl id="enterName">
+          <FormLabel>Enter name
+            <Input value={name} onChange={handleChange} />
+          </FormLabel>
+        </FormControl>
+        <Button m={6} colorScheme="purple" onClick={handleClick}>Add Name</Button>
+      </Box>
       </ChakraProvider>   
   )
 }
