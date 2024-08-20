@@ -11,12 +11,13 @@ export class AppService {
   ) {}
 
   async addName(name: string) {
-    const nameData = await this.namesRepository.save({ name });
-    return nameData;
+    await this.namesRepository.save({ name });
+    return await this.getNames();
   }
 
   async getNames(){
-    return {};
+    // get all names from the database
+    return await this.namesRepository.find();
   }
 }
 
