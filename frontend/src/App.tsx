@@ -2,12 +2,12 @@
 import './App.css';
 import { Box, Button, ChakraProvider, Input, FormControl, FormLabel } from '@chakra-ui/react';
 import axios from 'axios';
-import React, { useState } from 'react'; // Add this line
+import React, { useState } from 'react';
 
 function App() {
   const [name, setName] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   }
 
