@@ -16,7 +16,7 @@ import { Name } from './name.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Name],
-      synchronize: true,
+      synchronize: true, // not for prod
       logging: true,
     }),
     TypeOrmModule.forFeature([Name]),
