@@ -14,6 +14,7 @@ const Signup = () => {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<FormData>({
+    mode: "onBlur",
     resolver: zodResolver(UserSchema),
   });
 
