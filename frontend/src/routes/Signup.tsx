@@ -4,8 +4,9 @@ import InputField from "../components/Forms/InputField";
 import PasswordField from "../components/Forms/PasswordField";
 
 import { useForm } from "react-hook-form";
-import { FormData, UserSchema } from "../types";
+import { FormData, UserSchema, ValidFieldNames } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 const Signup = () => {
   const {
@@ -20,7 +21,35 @@ const Signup = () => {
 
   //TODO: fix submit handler to use actual API call
   const submitHandler = async (data: FormData) => {
-    await alert(JSON.stringify(data, null, 2));
+    try {
+      const res = await axios.post("http://localhost:3025/auth/signup", data);
+      const { errors = {} } = res.data; // Destructure the 'errors' property from the response data
+
+      // Define a mapping between server-side field names and their corresponding client-side names
+      const fieldErrorMapping: Record<string, ValidFieldNames> = {
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        username: "username",
+        password: "password",
+      };
+
+      // Find the first field with an error in the response data
+      const fieldWithError = Object.keys(fieldErrorMapping).find(
+        (field) => errors[field]
+      );
+
+      // If a field with an error is found, update the form error state using setError
+      if (fieldWithError) {
+        setError(fieldErrorMapping[fieldWithError], {
+          type: "server",
+          message: errors[fieldWithError],
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Submitting form failed!");
+    }
   };
 
   return (
