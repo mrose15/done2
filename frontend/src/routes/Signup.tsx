@@ -19,7 +19,7 @@ const Signup = () => {
 
   //TODO: fix submit handler to use actual API call
   const submitHandler = async (data: FormData) => {
-    await console.log(JSON.stringify(data, null, 2));
+    await alert(JSON.stringify(data, null, 2));
   };
 
   return (
