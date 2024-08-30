@@ -16,12 +16,13 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   name,
   register,
   error,
+  required,
 }) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl isInvalid={!!error} isRequired={required}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <InputGroup size="md">
         <Input

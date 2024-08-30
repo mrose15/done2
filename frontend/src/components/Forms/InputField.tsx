@@ -14,13 +14,13 @@ const PasswordField: React.FC<FormFieldProps> = ({
   name,
   register,
   error,
+  required,
 }) => {
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl isInvalid={!!error} isRequired={required}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <InputGroup size="md">
-        <Input id={name} type={type} variant="filled" {...register(name)} />
-      </InputGroup>
+
+      <Input id={name} type={type} variant="filled" {...register(name)} />
 
       <FormErrorMessage>{error && error.message}</FormErrorMessage>
     </FormControl>
