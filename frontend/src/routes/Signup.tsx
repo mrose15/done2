@@ -1,4 +1,12 @@
-import { Heading, Box, Button, Flex, VStack } from "@chakra-ui/react";
+import {
+  Heading,
+  Box,
+  Button,
+  Flex,
+  VStack,
+  Text,
+  chakra,
+} from "@chakra-ui/react";
 
 import InputField from "../components/Forms/InputField";
 import PasswordField from "../components/Forms/PasswordField";
@@ -14,12 +22,12 @@ const Signup = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    reset,
   } = useForm<FormData>({
-    mode: "onBlur",
+    mode: "onTouched",
     resolver: zodResolver(UserSchema),
   });
 
-  //TODO: fix submit handler to use actual API call
   const submitHandler = async (data: FormData) => {
     try {
       const res = await axios.post("http://localhost:3025/auth/signup", data);
@@ -46,6 +54,8 @@ const Signup = () => {
           message: errors[fieldWithError],
         });
       }
+
+      reset();
     } catch (error) {
       console.error(error);
       alert("Submitting form failed!");
@@ -55,9 +65,13 @@ const Signup = () => {
   return (
     <Flex bg="gray.200" align="center" justify="center" h="100vh" w="100vw">
       <Box bg="white" p={6} rounded="md" w={{ base: "90%", md: "40%" }}>
-        <Heading as="h1" fontSize="4xl">
+        <Heading as="h1" fontSize="4xl" mb={0}>
           Sign up
         </Heading>
+        <Text mb={3}>Sign up for an account</Text>
+        <Text fontSize="sm" mb={3}>
+          <chakra.span color="red.600">*</chakra.span> Indicates Required Field
+        </Text>
         <form onSubmit={handleSubmit(submitHandler)}>
           <VStack spacing={6} align="flex-start">
             <InputField
@@ -67,6 +81,7 @@ const Signup = () => {
               register={register}
               error={errors.firstName}
               id="firstName"
+              required={true}
             />
 
             <InputField
@@ -76,6 +91,7 @@ const Signup = () => {
               register={register}
               error={errors.lastName}
               id="lastName"
+              required={true}
             />
 
             <InputField
@@ -85,6 +101,7 @@ const Signup = () => {
               register={register}
               error={errors.email}
               id="email"
+              required={true}
             />
 
             <InputField
@@ -94,6 +111,7 @@ const Signup = () => {
               register={register}
               error={errors.username}
               id="username"
+              required={true}
             />
 
             <PasswordField
@@ -102,6 +120,7 @@ const Signup = () => {
               register={register}
               error={errors.password}
               id="password"
+              required={true}
             />
 
             <Button
