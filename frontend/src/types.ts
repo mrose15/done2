@@ -16,6 +16,7 @@ export type FormFieldProps = {
   id: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
+  required: boolean;
 };
 
 export type PasswordFieldProps = {
@@ -24,6 +25,7 @@ export type PasswordFieldProps = {
   id: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
+  required: boolean;
 };
 
 export type ValidFieldNames =
@@ -36,10 +38,15 @@ export type ValidFieldNames =
 export const UserSchema: ZodType<FormData> = z.object({
   firstName: z.string().min(1, "First Name is required"),
   lastName: z.string().min(1, "Last Name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z
+    .string()
+    .min(1, "Email address is required")
+    .email("Invalid email address"),
   username: z.string().min(1, "Username is required"),
-  password: z.string().min(8, { message: "Password is too short" }),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, { message: "Password is too short" }),
   //TODO:
   // add validation for password too short and is blank
-  // add validation for if email is blank
 });
