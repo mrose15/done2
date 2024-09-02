@@ -33,6 +33,8 @@ const Signup = () => {
       const res = await axios.post("http://localhost:3025/auth/signup", data);
       const { errors = {} } = res.data; // Destructure the 'errors' property from the response data
 
+      console.log("Signup successful:", res.data);
+
       // Define a mapping between server-side field names and their corresponding client-side names
       const fieldErrorMapping: Record<string, ValidFieldNames> = {
         firstName: "firstName",
