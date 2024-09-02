@@ -15,8 +15,11 @@ import { useForm } from "react-hook-form";
 import { FormData, UserSchema, ValidFieldNames } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -33,7 +36,9 @@ const Signup = () => {
       const res = await axios.post("http://localhost:3025/auth/signup", data);
       const { errors = {} } = res.data; // Destructure the 'errors' property from the response data
 
-      console.log("Signup successful:", res.data);
+      const token = res.data;
+      //TODO: store with cookie
+      localStorage.setItem("token", token);
 
       // Define a mapping between server-side field names and their corresponding client-side names
       const fieldErrorMapping: Record<string, ValidFieldNames> = {
@@ -58,6 +63,7 @@ const Signup = () => {
       }
 
       reset();
+      navigate("/projects");
     } catch (error) {
       console.error(error);
       alert("Submitting form failed!");
