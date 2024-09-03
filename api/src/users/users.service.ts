@@ -11,7 +11,6 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
   async createUser(user: SignupDto) {
-    console.log('User:', user);
-    return await this.usersRepository.save(user);
+    return await this.usersRepository.save({ ...user });
   }
 }
