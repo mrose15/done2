@@ -12,6 +12,10 @@ export class AuthService {
   }
 
   async signUp(signupDto) {
+    // TODO: check if username already exists
+
+    // TODO: check if email already exists
+
     //hash password
     const hashedPassword = await this.hashPassword(signupDto.password);
     signupDto.password = hashedPassword;
