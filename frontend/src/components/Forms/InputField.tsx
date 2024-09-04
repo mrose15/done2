@@ -3,12 +3,11 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  InputGroup,
 } from "@chakra-ui/react";
 
 import { FormFieldProps } from "../../types";
 
-const PasswordField: React.FC<FormFieldProps> = ({
+const InputField: React.FC<FormFieldProps> = ({
   label,
   type,
   name,
@@ -27,4 +26,4 @@ const PasswordField: React.FC<FormFieldProps> = ({
   );
 };
 
-export default PasswordField;
+export default InputField;
