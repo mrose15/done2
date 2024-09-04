@@ -40,7 +40,7 @@ const Signup = () => {
       //TODO: store with cookie
       localStorage.setItem("token", token);
 
-      // Define a mapping between server-side field names and their corresponding client-side names
+      //Define a mapping between server-side field names and their corresponding client-side names
       const fieldErrorMapping: Record<string, ValidFieldNames> = {
         firstName: "firstName",
         lastName: "lastName",
@@ -49,7 +49,7 @@ const Signup = () => {
         password: "password",
       };
 
-      // Find the first field with an error in the response data
+      //Find the first field with an error in the response data
       const fieldWithError = Object.keys(fieldErrorMapping).find(
         (field) => errors[field]
       );
@@ -65,8 +65,28 @@ const Signup = () => {
       reset();
       navigate("/projects");
     } catch (error) {
-      console.error(error);
-      alert("Submitting form failed!");
+      const errors = (error as any)?.response.data;
+
+      if (errors.statusCode > 200) {
+        setError("root.serverError", {
+          type: errors.statusCode,
+          message: "Something has gone wrong",
+        });
+      }
+
+      if (errors.message.includes("username")) {
+        setError("username", {
+          type: "server",
+          message: "Username is taken",
+        });
+      }
+
+      if (errors.message.includes("email")) {
+        setError("email", {
+          type: "server",
+          message: "Email address is already in use",
+        });
+      }
     }
   };
 
@@ -80,6 +100,13 @@ const Signup = () => {
         <Text fontSize="sm" mb={3}>
           <chakra.span color="red.600">*</chakra.span> Indicates Required Field
         </Text>
+
+        {errors?.root?.serverError?.type === 400 && (
+          <Text fontSize="sm" mb={3} color="red.600">
+            {errors?.root.serverError.message}
+          </Text>
+        )}
+
         <form onSubmit={handleSubmit(submitHandler)}>
           <VStack spacing={6} align="flex-start">
             <InputField
