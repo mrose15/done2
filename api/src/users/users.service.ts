@@ -10,6 +10,15 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  async findUserByUsername(username: string) {
+    return await this.usersRepository.findBy({ username });
+  }
+
+  async findUserByEmail(email: string) {
+    return await this.usersRepository.findBy({ email });
+  }
+
   async createUser(user: SignupDto) {
     return await this.usersRepository.save({ ...user });
   }
