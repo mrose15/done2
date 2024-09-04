@@ -47,6 +47,4 @@ export const UserSchema: ZodType<FormData> = z.object({
     .string()
     .min(1, "Password is required")
     .min(8, { message: "Password is too short" }),
-  //TODO:
-  // add validation for password too short and is blank
 });
