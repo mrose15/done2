@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config();
+
 import {
   CanActivate,
   ExecutionContext,
@@ -19,14 +22,12 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: 'secret',
+        secret: process.env.JWT_SECRET,
       });
-      console.log('payload', payload);
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
+
       request['user'] = payload;
     } catch (error) {
-      console.log('error', error);
+      console.log('Error verifying token:', error);
       throw new UnauthorizedException();
     }
     return true;
