@@ -46,6 +46,6 @@ export class AuthService {
     // add user to user table
     const user = await this.usersService.createUser(signupDto);
 
-    return await this.createAccessToken(user); // Replace with actual JWT token generation logic
+    return await this.createAccessToken(user);
   }
 }
