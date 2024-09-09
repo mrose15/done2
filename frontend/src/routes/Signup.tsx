@@ -52,7 +52,6 @@ const Signup = () => {
       navigate("/projects");
     } catch (error) {
       const errors = error?.response.data;
-      console.log(errors);
 
       if (errors.statusCode > 200) {
         setError("root.serverError", {

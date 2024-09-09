@@ -24,8 +24,6 @@ const Login = () => {
       const res = await axios.post("http://localhost:3025/auth/login", data);
       const { errors = {} } = res.data;
 
-      console.log(res.data);
-
       const token = res.data;
       //TODO: store with cookie
       localStorage.setItem("token", token);
@@ -51,7 +49,6 @@ const Login = () => {
       navigate("/projects");
     } catch (error) {
       const errors = error?.response.data;
-      console.log(errors);
 
       if (errors.statusCode > 200) {
         setError("root.serverError", {
