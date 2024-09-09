@@ -75,6 +75,6 @@ export class AuthService {
       throw new UnauthorizedException('Check your username and password');
     }
 
-    return 'fake token';
+    return await this.createAccessToken(user);
   }
 }
