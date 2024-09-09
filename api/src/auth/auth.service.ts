@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  UnauthorizedException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './auth.controller';
+import { LogInDto } from './auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -23,17 +28,18 @@ export class AuthService {
 
   async signUp(signupDto: SignupDto) {
     // check if username already exists
-    const usernameExists =
-      (await this.usersService.findUserByUsername(signupDto.username)).length >
-      0;
+    const usernameExists = (
+      await this.usersService.findUserByUsername(signupDto.username)
+    )?.username;
 
     if (usernameExists) {
       throw new BadRequestException('username already exists');
     }
 
     // check if email already exists
-    const emailExists =
-      (await this.usersService.findUserByEmail(signupDto.email)).length > 0;
+    const emailExists = (
+      await this.usersService.findUserByEmail(signupDto.email)
+    )?.email;
 
     if (emailExists) {
       throw new BadRequestException('email already exists');
@@ -47,5 +53,28 @@ export class AuthService {
     const user = await this.usersService.createUser(signupDto);
 
     return await this.createAccessToken(user);
+  }
+
+  async verifyPassword(enteredPassword: string, existingPassword: string) {
+    return await bcrypt.compare(enteredPassword, existingPassword);
+  }
+
+  async logIn(logInDto: LogInDto) {
+    const user = await this.usersService.findUserByUsername(logInDto.username);
+
+    if (!user) {
+      throw new UnauthorizedException('Check your username and password');
+    }
+
+    const passwordsMatch = await this.verifyPassword(
+      logInDto.password,
+      user.password,
+    );
+
+    if (!passwordsMatch) {
+      throw new UnauthorizedException('Check your username and password');
+    }
+
+    return 'fake token';
   }
 }
