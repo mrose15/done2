@@ -5,9 +5,9 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { FormFieldProps } from "../../types";
+import { InputFieldProps } from "../../types";
 
-const InputField: React.FC<FormFieldProps> = ({
+const InputField: React.FC<InputFieldProps> = ({
   label,
   type,
   name,

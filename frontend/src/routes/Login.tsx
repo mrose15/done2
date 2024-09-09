@@ -1,48 +1,37 @@
-import {
-  Box,
-  Button,
-  chakra,
-  Flex,
-  Heading,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Heading, Box, Flex, Text, chakra } from "@chakra-ui/react";
+import FormWrapper from "../components/Forms/FormWrapper";
 import InputField from "../components/Forms/InputField";
 import PasswordField from "../components/Forms/PasswordField";
-
-import { useForm } from "react-hook-form";
-import { FormData, UserSchema, ValidFieldNames } from "../types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginFormData, LoginSchema, LoginValidFieldNames } from "../types";
+import {
+  useForm,
+  UseFormSetError,
+  UseFormRegister,
+  FieldErrors,
+} from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { formState } = useForm();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-  } = useForm<FormData>({
-    mode: "onTouched",
-    resolver: zodResolver(UserSchema),
-  });
-
-  const submitHandler = async (data: FormData) => {
-    console.log("username", data.username);
-    console.log("password", data.password);
-    console.log("data", data);
+  const submitHandler = async (
+    data: LoginFormData,
+    setError: UseFormSetError<LoginFormData>
+  ) => {
     try {
       const res = await axios.post("http://localhost:3025/auth/login", data);
-      const { errors = {} } = res.data; // Destructure the 'errors' property from the response data
+      const { errors = {} } = res.data;
+
+      console.log(res.data);
 
       const token = res.data;
       //TODO: store with cookie
       localStorage.setItem("token", token);
 
       //Define a mapping between server-side field names and their corresponding client-side names
-      const fieldErrorMapping: Record<string, ValidFieldNames> = {
+      const fieldErrorMapping: Record<string, LoginValidFieldNames> = {
         username: "username",
         password: "password",
       };
@@ -52,7 +41,6 @@ const Login = () => {
         (field) => errors[field]
       );
 
-      // If a field with an error is found, update the form error state using setError
       if (fieldWithError) {
         setError(fieldErrorMapping[fieldWithError], {
           type: "server",
@@ -62,31 +50,42 @@ const Login = () => {
 
       navigate("/projects");
     } catch (error) {
-      const errors = (error as any)?.response.data;
+      const errors = error?.response.data;
+      console.log(errors);
 
       if (errors.statusCode > 200) {
         setError("root.serverError", {
           type: errors.statusCode,
-          message:
-            "There was an error logging in. Please check your username and password and try again.",
-        });
-      }
-
-      if (errors.message.includes("username")) {
-        setError("username", {
-          type: "server",
-          message: "Username is incorrect",
-        });
-      }
-
-      if (errors.message.includes("password")) {
-        setError("password", {
-          type: "server",
-          message: "Password is incorrect",
+          message: "Check your username and password",
         });
       }
     }
   };
+
+  const formFields = (
+    register: UseFormRegister<LoginFormData>,
+    errors: FieldErrors<LoginFormData>
+  ) => (
+    <>
+      <InputField
+        name="username"
+        type="text"
+        label="Username"
+        id="username"
+        required={true}
+        register={register}
+        error={errors.username}
+      />
+      <PasswordField
+        name="password"
+        label="Password"
+        id="password"
+        required={true}
+        register={register}
+        error={errors.password}
+      />
+    </>
+  );
 
   return (
     <Flex bg="gray.200" align="center" justify="center" h="100vh" w="100vw">
@@ -98,48 +97,18 @@ const Login = () => {
           <chakra.span color="red.600">*</chakra.span> Indicates Required Field
         </Text>
 
-        {errors?.root?.serverError?.type === 400 && (
+        {formState.errors.root?.serverError?.type === 400 && (
           <Text fontSize="sm" mb={3} color="red.600">
-            {errors?.root.serverError.message}
+            {formState.errors.root.serverError.message}
           </Text>
         )}
 
-        <form
-          onSubmit={handleSubmit((stuff) => {
-            console.log("Form submitted", stuff);
-            submitHandler(stuff);
-          })}
-        >
-          <VStack spacing={6} align="flex-start">
-            <InputField
-              name="username"
-              type="text"
-              label="Username"
-              register={register}
-              error={errors.username}
-              id="username"
-              required={true}
-            />
-
-            <PasswordField
-              name="password"
-              label="Password"
-              register={register}
-              error={errors.password}
-              id="password"
-              required={true}
-            />
-
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              colorScheme="purple"
-              width="full"
-            >
-              Login
-            </Button>
-          </VStack>
-        </form>
+        <FormWrapper
+          schema={LoginSchema}
+          onSubmit={submitHandler}
+          fields={formFields}
+          submitButtonText="Log In"
+        />
       </Box>
     </Flex>
   );

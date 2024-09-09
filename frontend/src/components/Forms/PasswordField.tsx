@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 
 import { useState } from "react";
-import { PasswordFieldProps } from "../../types";
+import { InputFieldProps } from "../../types";
 
-const PasswordField: React.FC<PasswordFieldProps> = ({
+const PasswordField: React.FC<InputFieldProps> = ({
   label,
   name,
   register,

@@ -1,40 +1,28 @@
-import {
-  Heading,
-  Box,
-  Button,
-  Flex,
-  VStack,
-  Text,
-  chakra,
-} from "@chakra-ui/react";
-
+import { Heading, Box, Flex, Text, chakra } from "@chakra-ui/react";
+import FormWrapper from "../components/Forms/FormWrapper";
 import InputField from "../components/Forms/InputField";
 import PasswordField from "../components/Forms/PasswordField";
-
-import { useForm } from "react-hook-form";
-import { FormData, UserSchema, ValidFieldNames } from "../types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { UserSchema, ValidFieldNames, FormData } from "../types";
+import {
+  useForm,
+  UseFormSetError,
+  UseFormRegister,
+  FieldErrors,
+} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { formState } = useForm<FormData>();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-    reset,
-  } = useForm<FormData>({
-    mode: "onTouched",
-    resolver: zodResolver(UserSchema),
-  });
-
-  const submitHandler = async (data: FormData) => {
+  const submitHandler = async (
+    data: FormData,
+    setError: UseFormSetError<FormData>
+  ) => {
     try {
       const res = await axios.post("http://localhost:3025/auth/signup", data);
-      const { errors = {} } = res.data; // Destructure the 'errors' property from the response data
+      const { errors = {} } = res.data;
 
       const token = res.data;
       //TODO: store with cookie
@@ -54,7 +42,6 @@ const Signup = () => {
         (field) => errors[field]
       );
 
-      // If a field with an error is found, update the form error state using setError
       if (fieldWithError) {
         setError(fieldErrorMapping[fieldWithError], {
           type: "server",
@@ -62,10 +49,10 @@ const Signup = () => {
         });
       }
 
-      reset();
       navigate("/projects");
     } catch (error) {
-      const errors = (error as any)?.response.data;
+      const errors = error?.response.data;
+      console.log(errors);
 
       if (errors.statusCode > 200) {
         setError("root.serverError", {
@@ -90,6 +77,58 @@ const Signup = () => {
     }
   };
 
+  const formFields = (
+    register: UseFormRegister<FormData>,
+    errors: FieldErrors<FormData>
+  ) => (
+    <>
+      <InputField
+        name="firstName"
+        type="text"
+        label="First Name"
+        id="firstName"
+        required={true}
+        register={register}
+        error={errors.firstName}
+      />
+      <InputField
+        name="lastName"
+        type="text"
+        label="Last Name"
+        id="lastName"
+        required={true}
+        register={register}
+        error={errors.lastName}
+      />
+      <InputField
+        name="email"
+        type="email"
+        label="Email"
+        id="email"
+        required={true}
+        register={register}
+        error={errors.email}
+      />
+      <InputField
+        name="username"
+        type="text"
+        label="Username"
+        id="username"
+        required={true}
+        register={register}
+        error={errors.username}
+      />
+      <PasswordField
+        name="password"
+        label="Password"
+        id="password"
+        required={true}
+        register={register}
+        error={errors.password}
+      />
+    </>
+  );
+
   return (
     <Flex bg="gray.200" align="center" justify="center" h="100vh" w="100vw">
       <Box bg="white" p={6} rounded="md" w={{ base: "90%", md: "40%" }}>
@@ -101,73 +140,18 @@ const Signup = () => {
           <chakra.span color="red.600">*</chakra.span> Indicates Required Field
         </Text>
 
-        {errors?.root?.serverError?.type === 400 && (
+        {formState.errors.root?.serverError?.type === 400 && (
           <Text fontSize="sm" mb={3} color="red.600">
-            {errors?.root.serverError.message}
+            {formState.errors.root.serverError.message}
           </Text>
         )}
 
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <VStack spacing={6} align="flex-start">
-            <InputField
-              name="firstName"
-              type="text"
-              label="First Name"
-              register={register}
-              error={errors.firstName}
-              id="firstName"
-              required={true}
-            />
-
-            <InputField
-              name="lastName"
-              type="text"
-              label="Last Name"
-              register={register}
-              error={errors.lastName}
-              id="lastName"
-              required={true}
-            />
-
-            <InputField
-              name="email"
-              type="email"
-              label="Email"
-              register={register}
-              error={errors.email}
-              id="email"
-              required={true}
-            />
-
-            <InputField
-              name="username"
-              type="text"
-              label="Username"
-              register={register}
-              error={errors.username}
-              id="username"
-              required={true}
-            />
-
-            <PasswordField
-              name="password"
-              label="Password"
-              register={register}
-              error={errors.password}
-              id="password"
-              required={true}
-            />
-
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              colorScheme="purple"
-              width="full"
-            >
-              Sign Up
-            </Button>
-          </VStack>
-        </form>
+        <FormWrapper
+          schema={UserSchema}
+          onSubmit={submitHandler}
+          fields={formFields}
+          submitButtonText="Sign up"
+        />
       </Box>
     </Flex>
   );
