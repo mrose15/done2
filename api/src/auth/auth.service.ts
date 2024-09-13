@@ -77,4 +77,13 @@ export class AuthService {
 
     return await this.createAccessToken(user);
   }
+
+  async getProfileData(username: string) {
+    const user = await this.usersService.findUserByUsername(username);
+    return {
+      email: user.email,
+      name: user.firstName,
+      username: user.username,
+    };
+  }
 }
