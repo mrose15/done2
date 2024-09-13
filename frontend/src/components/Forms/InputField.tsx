@@ -19,7 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({
     <FormControl isInvalid={!!error} isRequired={required}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
 
-      <Input id={name} type={type} variant="filled" {...register(name)} />
+      <Input id={name} type={type} variant="outline" {...register(name)} />
 
       <FormErrorMessage>{error && error.message}</FormErrorMessage>
     </FormControl>

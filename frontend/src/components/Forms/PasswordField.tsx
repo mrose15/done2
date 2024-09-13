@@ -11,6 +11,8 @@ import {
 import { useState } from "react";
 import { InputFieldProps } from "../../types";
 
+//TODO: Combine with InputField?
+
 const PasswordField: React.FC<InputFieldProps> = ({
   label,
   name,
@@ -28,7 +30,7 @@ const PasswordField: React.FC<InputFieldProps> = ({
         <Input
           id={name}
           type={show ? "text" : "password"}
-          variant="filled"
+          variant="outline"
           {...register(name)}
         />
         <InputRightElement width="4.5rem">
