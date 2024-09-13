@@ -85,9 +85,23 @@ const Login = () => {
   );
 
   return (
-    <Flex bg="gray.200" align="center" justify="center" h="100vh" w="100vw">
-      <Box bg="white" p={6} rounded="md" w={{ base: "90%", md: "40%" }}>
-        <Heading as="h1" fontSize="4xl" mb={0}>
+    <Flex
+      bg="white"
+      align="center"
+      direction="column"
+      justify="flex-start"
+      h="100vh"
+      w="100%"
+    >
+      <Box
+        bg="white"
+        p={6}
+        mt={40}
+        rounded="md"
+        boxShadow="xl"
+        w={{ base: "90%", md: "40%" }}
+      >
+        <Heading as="h1" fontSize="4xl" mb={6}>
           Log in
         </Heading>
         <Text fontSize="sm" mb={3}>
