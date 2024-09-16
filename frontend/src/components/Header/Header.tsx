@@ -10,13 +10,17 @@ TODO:
 */
 
 const pages = [
-  { name: "Projects", path: "/projects" },
-  { name: "Profile", path: "/profile" },
-  { name: "Login", path: "/login" },
-  { name: "Sign Up", path: "/signup" },
+  { name: "Projects", path: "/projects", showWhenLoggedIn: true },
+  { name: "Profile", path: "/profile", showWhenLoggedIn: true },
+  { name: "Login", path: "/login", showWhenLoggedIn: false },
+  { name: "Sign Up", path: "/signup", showWhenLoggedIn: false },
 ];
 
-const Header = () => {
+type HeaderProps = {
+  loggedIn: boolean;
+};
+
+const Header = ({ loggedIn }: HeaderProps) => {
   return (
     <Box
       as="header"
@@ -28,16 +32,16 @@ const Header = () => {
     >
       <Flex display="flex" direction="column" align="flex-start" gap={2}>
         <Image src={logo} alt="Done2 logo" color="black" width="150px" />
-        <Text fontSize="lg" color="purple.500">
-          Project Planner
-        </Text>
       </Flex>
       <Box as="nav" display="flex" gap={5} mt={6}>
-        {pages.map((page) => (
-          <ChakraLink key={page.name} as={ReactRouterLink} to={page.path}>
-            {page.name}
-          </ChakraLink>
-        ))}
+        {pages.map(
+          (page) =>
+            loggedIn === page.showWhenLoggedIn && (
+              <ChakraLink key={page.name} as={ReactRouterLink} to={page.path}>
+                {page.name}
+              </ChakraLink>
+            )
+        )}
       </Box>
     </Box>
   );
