@@ -57,3 +57,8 @@ export type InputFieldProps = {
   register: UseFormRegister<any>;
   error: FieldError;
 };
+
+export type Context = {
+  loggedIn: boolean;
+  toggleLoggedIn: () => void;
+};
