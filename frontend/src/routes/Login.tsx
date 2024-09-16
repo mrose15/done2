@@ -10,11 +10,13 @@ import {
   FieldErrors,
 } from "react-hook-form";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { Context } from "../types";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { formState } = useForm();
+  const { formState } = useForm<LoginFormData>();
+  const context = useOutletContext<Context>();
 
   const submitHandler = async (
     data: LoginFormData,
@@ -27,14 +29,13 @@ const Login = () => {
       const token = res.data;
       //TODO: store with cookie
       localStorage.setItem("token", token);
+      context.toggleLoggedIn();
 
-      //Define a mapping between server-side field names and their corresponding client-side names
       const fieldErrorMapping: Record<string, LoginValidFieldNames> = {
         username: "username",
         password: "password",
       };
 
-      //Find the first field with an error in the response data
       const fieldWithError = Object.keys(fieldErrorMapping).find(
         (field) => errors[field]
       );
@@ -96,7 +97,7 @@ const Login = () => {
       <Box
         bg="white"
         p={6}
-        mt={40}
+        mt={20}
         rounded="md"
         boxShadow="xl"
         w={{ base: "90%", md: "40%" }}

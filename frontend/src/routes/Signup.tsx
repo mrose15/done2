@@ -9,12 +9,14 @@ import {
   UseFormRegister,
   FieldErrors,
 } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { Context } from "../types";
 import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { formState } = useForm<FormData>();
+  const context = useOutletContext<Context>();
 
   const submitHandler = async (
     data: FormData,
@@ -25,6 +27,7 @@ const Signup = () => {
       const { errors = {} } = res.data;
 
       const token = res.data;
+      context.toggleLoggedIn();
       //TODO: store with cookie
       localStorage.setItem("token", token);
 
@@ -140,12 +143,12 @@ const Signup = () => {
       <Box
         bg="white"
         p={6}
-        mt={40}
+        mt={20}
         rounded="md"
         boxShadow="xl"
         w={{ base: "90%", md: "40%" }}
       >
-        <Heading as="h1" fontSize="4xl" mb={0}>
+        <Heading as="h1" fontSize="4xl" mb={6}>
           Sign up
         </Heading>
         <Text fontSize="sm" mb={3}>
