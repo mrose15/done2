@@ -1,7 +1,9 @@
-import { Heading, Box, Flex, Text, chakra } from "@chakra-ui/react";
+import { Heading, Text, chakra } from "@chakra-ui/react";
 import FormWrapper from "../components/Forms/FormWrapper";
 import InputField from "../components/Forms/InputField";
 import PasswordField from "../components/Forms/PasswordField";
+import GlassBox from "../components/GlassBox/GlassBox";
+import GradientFlex from "../components/GradientFlex/GradientFlex";
 import { UserSchema, ValidFieldNames, FormData } from "../types";
 import {
   useForm,
@@ -12,6 +14,8 @@ import {
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Context } from "../types";
 import axios from "axios";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -132,43 +136,37 @@ const Signup = () => {
   );
 
   return (
-    <Flex
-      bg="white"
-      align="center"
-      direction="column"
-      justify="flex-start"
-      h="100vh"
-      w="100%"
-    >
-      <Box
-        bg="white"
-        p={6}
+    <GradientFlex variant="bg-gradient">
+      <GlassBox
         mt={20}
-        rounded="md"
-        boxShadow="xl"
+        p={8}
         w={{ base: "90%", md: "40%" }}
+        variant="glassmorphism"
       >
-        <Heading as="h1" fontSize="4xl" mb={6}>
+        <Heading as="h1" fontSize="3xl" mb={6}>
           Sign up
         </Heading>
         <Text fontSize="sm" mb={3}>
           <chakra.span color="red.600">*</chakra.span> Indicates Required Field
         </Text>
-
         {formState.errors.root?.serverError?.type === 400 && (
           <Text fontSize="sm" mb={3} color="red.600">
             {formState.errors.root.serverError.message}
           </Text>
         )}
-
         <FormWrapper
           schema={UserSchema}
           onSubmit={submitHandler}
           fields={formFields}
           submitButtonText="Sign up"
-        />
-      </Box>
-    </Flex>
+        />{" "}
+        <Text fontSize="sm" mt={7} align="center">
+          <ChakraLink as={ReactRouterLink} to="/login">
+            Already have an account? Login here
+          </ChakraLink>
+        </Text>
+      </GlassBox>
+    </GradientFlex>
   );
 };
 

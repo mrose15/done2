@@ -1,4 +1,4 @@
-import { Box, Image, Text, Flex } from "@chakra-ui/react";
+import { Box, Image, Flex, Container } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import logo from "/logo.svg";
@@ -22,28 +22,29 @@ type HeaderProps = {
 
 const Header = ({ loggedIn }: HeaderProps) => {
   return (
-    <Box
-      as="header"
-      px={10}
-      pt={8}
-      pb={10}
-      display="flex"
-      justifyContent="space-between"
-    >
-      <Flex display="flex" direction="column" align="flex-start" gap={2}>
-        <Image src={logo} alt="Done2 logo" color="black" width="150px" />
-      </Flex>
-      <Box as="nav" display="flex" gap={5} mt={6}>
-        {pages.map(
-          (page) =>
-            loggedIn === page.showWhenLoggedIn && (
-              <ChakraLink key={page.name} as={ReactRouterLink} to={page.path}>
-                {page.name}
-              </ChakraLink>
-            )
-        )}
+    <Container maxW={{ base: "100%", md: "4xl" }} px={{ base: 10 }}>
+      <Box
+        as="header"
+        pt={8}
+        pb={10}
+        display="flex"
+        justifyContent="space-between"
+      >
+        <Flex display="flex" direction="column" align="flex-start" gap={2}>
+          <Image src={logo} alt="Done2 logo" color="black" width="150px" />
+        </Flex>
+        <Box as="nav" display="flex" gap={5} mt={6}>
+          {pages.map(
+            (page) =>
+              loggedIn === page.showWhenLoggedIn && (
+                <ChakraLink key={page.name} as={ReactRouterLink} to={page.path}>
+                  {page.name}
+                </ChakraLink>
+              )
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Container>
   );
 };
 

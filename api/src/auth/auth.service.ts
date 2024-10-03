@@ -80,9 +80,11 @@ export class AuthService {
 
   async getProfileData(username: string) {
     const user = await this.usersService.findUserByUsername(username);
+
     return {
       email: user.email,
-      name: user.firstName,
+      firstName: user.firstName,
+      lastName: user.lastName,
       username: user.username,
     };
   }

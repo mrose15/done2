@@ -34,7 +34,13 @@ const PasswordField: React.FC<InputFieldProps> = ({
           {...register(name)}
         />
         <InputRightElement width="4.5rem">
-          <Button h="1.75rem" size="sm" onClick={handleClick}>
+          <Button
+            h="1.75rem"
+            size="sm"
+            onClick={handleClick}
+            variant="solid"
+            colorScheme="purple"
+          >
             {show ? "Hide" : "Show"}
           </Button>
         </InputRightElement>
