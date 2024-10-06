@@ -43,6 +43,18 @@ export class LogInDto {
   password: string;
 }
 
+export class AccountDetailDto {
+  @IsNotEmpty()
+  username: string;
+
+  @IsNotEmpty()
+  field: string;
+
+  @IsNotEmpty()
+  @Transform((params) => sanitizeHtml(params.value))
+  value: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -55,6 +67,12 @@ export class AuthController {
   @Post('login')
   logIn(@Body() logInDto: LogInDto) {
     return this.authService.logIn(logInDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('change-account-details')
+  changeAccountDetails(@Body() accountDetailDto: AccountDetailDto) {
+    return this.authService.changeAccountDetails(accountDetailDto);
   }
 
   @UseGuards(AuthGuard)

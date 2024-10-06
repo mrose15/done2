@@ -6,7 +6,7 @@ import {
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { SignupDto } from './auth.controller';
+import { AccountDetailDto, SignupDto } from './auth.controller';
 import { LogInDto } from './auth.controller';
 
 @Injectable()
@@ -76,6 +76,10 @@ export class AuthService {
     }
 
     return await this.createAccessToken(user);
+  }
+
+  async changeAccountDetails(accountDetailDto: AccountDetailDto) {
+    console.log('Account detail', accountDetailDto);
   }
 
   async getProfileData(username: string) {

@@ -1,5 +1,13 @@
 import { useLoaderData, useNavigate, useOutletContext } from "react-router-dom";
-import { Container, Heading, Box, Button, Text, Flex } from "@chakra-ui/react";
+import {
+  Container,
+  Heading,
+  Box,
+  Button,
+  Text,
+  Flex,
+  Avatar,
+} from "@chakra-ui/react";
 import EditableFields from "../components/Forms/EditableFields";
 import { Context } from "../types";
 
@@ -15,8 +23,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const context = useOutletContext<Context>();
 
-  console.log(data);
-
   const logoutHandler = () => {
     localStorage.removeItem("token");
     context.toggleLoggedIn();
@@ -29,15 +35,45 @@ const Profile = () => {
         Profile
       </Heading>
       <Text>Welcome, {data.firstName}!</Text>
-      <Flex mt={10}>
-        <Box>Photo Goes here</Box>
-        <Box>
-          <EditableFields label="First Name" data={data.firstName} />
-          <EditableFields label="Last Name" data={data.lastName} />
-          <EditableFields label="Username" data={data.username} />
+      <Flex mt={10} gap={10}>
+        <Box display="flex" alignItems="center">
+          <Avatar
+            bg="blue.400"
+            size="2xl"
+            name={`${data.firstName} ${data.lastName}`}
+          />
+        </Box>
+        <Box flex="1 auto">
+          <EditableFields
+            label="First Name"
+            value={data.firstName}
+            username={data.username}
+            field="firstName"
+          />
+          <EditableFields
+            label="Last Name"
+            value={data.lastName}
+            username={data.username}
+            field="lastName"
+          />
+          <EditableFields
+            label="Username"
+            value={data.username}
+            username={data.username}
+            field="username"
+          />
+          <EditableFields
+            label="Password"
+            value="*********"
+            username={data.username}
+            field="password"
+          />
         </Box>
       </Flex>
-      <Button onClick={logoutHandler}>Logout</Button>
+      <Flex mt={10} gap={10} justify="center">
+        <Button onClick={logoutHandler}>Logout</Button>
+        <Button onClick={() => {}}>Delete Account</Button>
+      </Flex>
     </Container>
   );
 };
